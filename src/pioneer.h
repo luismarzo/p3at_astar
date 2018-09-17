@@ -20,6 +20,11 @@
 class Pioneer
 {
   public:
+	bool direction0;
+	bool direction90;
+	bool direction180;
+	bool direction270;
+
 	Pioneer(int argc, char **argv)
 	{
 		ros::init(argc, argv, "a_star_publisher");
@@ -73,7 +78,7 @@ class Pioneer
 	{
 		pub.publish(msg);
 		ros::spinOnce();
-		sleep(3);
+		
 	}
 
   private:

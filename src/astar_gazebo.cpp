@@ -345,9 +345,15 @@ int main(int argc, char **argv)
     std::cout << cnt << std::endl;
     int col = 0, row = 0;
 
+
     
 
     Pioneer pioneer(argc,argv);
+
+    pioneer.direction0=1;
+	pioneer.direction90=0;
+	pioneer.direction180=0;
+	pioneer.direction270=0;
 
     while (ros::ok())
     {
@@ -362,8 +368,15 @@ int main(int argc, char **argv)
 
         if (row == 1 && col == 0)
         {
-            
+            if(pioneer.direction0==0){
+                std::cout<<"entra1"<<std::endl;
             pioneer.go_forward();
+            }
+            else{
+                std::cout<<"entra2"<<std::endl;
+            pioneer.turn_for45();
+            }
+            
             
         }
         else if (row == 1 && col == 1)
@@ -371,9 +384,12 @@ int main(int argc, char **argv)
             
             pioneer.turn_back45();
             pioneer.upgrade();
+            sleep(3);
             pioneer.go_diag();
             pioneer.upgrade();
+            sleep(3);
             pioneer.turn_for45();
+            
 
         }
         else if (row == 0 && col == 1)
@@ -389,6 +405,7 @@ int main(int argc, char **argv)
 
         cnt--;
         pioneer.upgrade();
+        sleep(3);
     }
 
     return 0;
