@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <float.h>
-#include "ros/ros.h"
+//#include "ros/ros.h"
 #include <sstream>
 /* and not not_eq */
 #include <iso646.h>
+#include "pioneer.h"
 /* add -lm to command line to compile with this header */
 #include <math.h>
-#include "geometry_msgs/Twist.h"
+//#include "geometry_msgs/Twist.h"
 
 #define map_size_rows 30
 #define map_size_cols 25
@@ -98,6 +99,8 @@ struct route
     int y; /* intex of stop in array of all stops od dst of this route */
     double d;
 };
+
+
 
 int main(int argc, char **argv)
 {
@@ -336,21 +339,15 @@ int main(int argc, char **argv)
     // free(open);
     // free(closed);
 
-    ros::init(argc, argv, "a_star_publisher");
-    ros::NodeHandle n;
-    ros::Publisher pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1000);
-    ros::Rate loop_rate(10);
+    
 
     int cnt = p_len - 1; //es 41
     std::cout << cnt << std::endl;
     int col = 0, row = 0;
 
-    geometry_msgs::Twist msg;
-    msg.linear.x = 0;
-    msg.angular.z = 0;
-    pub.publish(msg);
-    ros::spinOnce();
-    loop_rate.sleep();
+    
+
+    Pioneer pioneer(argc,argv);
 
     while (ros::ok())
     {
@@ -365,80 +362,33 @@ int main(int argc, char **argv)
 
         if (row == 1 && col == 0)
         {
-
-            msg.linear.x = 0.505;
-            msg.angular.z = 0;
+            
+            pioneer.go_forward();
+            
         }
         else if (row == 1 && col == 1)
         {
             
-            msg.linear.x = 0;
-            msg.angular.z = 0.498;
-            pub.publish(msg);
-            sleep(3);
-            msg.linear.x = 0.636;
-            msg.angular.z = 0;
-            pub.publish(msg);
-            sleep(3);
-            msg.linear.x = 0;
-            msg.angular.z = -0.498;
-            pub.publish(msg);
+            pioneer.turn_back45();
+            pioneer.upgrade();
+            pioneer.go_diag();
+            pioneer.upgrade();
+            pioneer.turn_for45();
+
         }
         else if (row == 0 && col == 1)
         {
             
-            msg.linear.x = 0;
-            msg.angular.z = -0.498;
-            pub.publish(msg);
-            sleep(3);
-            msg.linear.x = 0;
-            msg.angular.z = -0.498;;
-            pub.publish(msg);
-            sleep(3);
-            msg.linear.x = 0.505;
-            msg.angular.z = 0;
-            pub.publish(msg);
-            msg.linear.x = 0;
-            msg.angular.z = 0.498;
-            pub.publish(msg);
-            sleep(3);
-            msg.linear.x = 0;
-            msg.angular.z = 0.498;;
-            pub.publish(msg);
-            sleep(3);
+           
         }
+
         else
         {
-            msg.linear.x = 0;
-            msg.angular.z = 0;
+            pioneer.stop();
         }
-        // else if(col==1 && row==1 ){
-        // msg.linear.x = 0;
-        // msg.angular.z = 0.498;
-        // }
-        // else if(col==-1 && row==0 ){
-        // msg.linear.x = -0.505;
-        // msg.angular.z = 0;
-        // }
-
-        // else
-        // {
-        // msg.linear.x = 0;
-        // msg.angular.z = 0;
-        // }
 
         cnt--;
-        pub.publish(msg);
-        //ros::spinOnce();
-        //loop_rate.sleep();
-        // sleep(3);
-        // msg.linear.x = 0;
-        // msg.angular.z = 0;
-
-        // pub.publish(msg);
-        ros::spinOnce();
-        loop_rate.sleep();
-        sleep(3);
+        pioneer.upgrade();
     }
 
     return 0;

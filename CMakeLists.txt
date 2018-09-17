@@ -23,6 +23,9 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+file(GLOB_RECURSE SRC_FILES "src/*.cpp" "include/*.h" "include/*.inl" )
+
+
 ## Declare a C++ library
 # add_library(random_walk src/random_walk.cpp)
 # target_link_libraries(random_walk ${catkin_LIBRARIES})
@@ -33,4 +36,5 @@ target_link_libraries(pose_tf ${catkin_LIBRARIES})
 
 add_executable(astar_gazebo "src/astar_gazebo.cpp")
 target_link_libraries(astar_gazebo ${catkin_LIBRARIES})
+include_directories(PUBLIC ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/include)
 add_dependencies(astar_gazebo p3at_tutorial_generate_messages_cpp)
