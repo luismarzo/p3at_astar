@@ -1,0 +1,2 @@
+/usr/bin/ar qc liba-star.a  CMakeFiles/a-star.dir/source/AStar.cpp.o
+/usr/bin/ranlib liba-star.a

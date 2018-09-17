@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/colossus/ws_p3at/src/p3at_tutorial/a-star/source/new_a_star.cpp
+list
+-
+algorithm
+-
+iostream
+-
+
