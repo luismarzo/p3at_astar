@@ -20,10 +20,8 @@
 class Pioneer
 {
   public:
-	bool direction0;
-	bool direction90;
-	bool direction180;
-	bool direction270;
+
+	enum direction { FORWARD, BACKWARD, LEFT, RIGHT };
 
 	Pioneer(int argc, char **argv)
 	{
@@ -38,47 +36,52 @@ class Pioneer
 	};
 
 	void go_forward()
-	{
+	{	std::cout<<"forward"<<std::endl;
 		msg.linear.x = 0.505;
 		msg.angular.z = 0;
+		upgrade();
 	}
 
 	void go_backward()
-	{
+	{	std::cout<<"backward"<<std::endl;
 		msg.linear.x = -0.505;
 		msg.angular.z = 0;
+		upgrade();
 	}
 
 	void go_diag()
-	{
+	{	std::cout<<"diag"<<std::endl;
 		msg.linear.x = 0.636;
 		msg.angular.z = 0;
+		upgrade();
 	}
 
 	void turn_for45()
-	{
+	{	std::cout<<"turn45"<<std::endl;
 		msg.linear.x = 0;
 		msg.angular.z = 0.498;
+		upgrade();
 	}
 
-
 	void turn_back45()
-	{
+	{std::cout<<"back45"<<std::endl;
 		msg.linear.x = 0;
 		msg.angular.z = -0.498;
+		upgrade();
 	}
 
 	void stop()
-	{
+	{	std::cout<<"stop"<<std::endl;
 		msg.linear.x = 0;
 		msg.angular.z = 0;
+		upgrade();
 	}
 
 	void upgrade()
-	{
+	{	std::cout<<"publishing: linear:"<<msg.linear.x<<" and angular:"<<msg.angular.z<<std::endl;
 		pub.publish(msg);
 		ros::spinOnce();
-		
+		sleep(3);
 	}
 
   private:

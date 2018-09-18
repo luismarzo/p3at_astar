@@ -350,10 +350,12 @@ int main(int argc, char **argv)
 
     Pioneer pioneer(argc,argv);
 
-    pioneer.direction0=1;
-	pioneer.direction90=0;
-	pioneer.direction180=0;
-	pioneer.direction270=0;
+    Pioneer::direction direction= Pioneer::FORWARD;
+
+
+    pioneer.stop();
+    pioneer.upgrade();
+    sleep(3);
 
     while (ros::ok())
     {
@@ -368,33 +370,84 @@ int main(int argc, char **argv)
 
         if (row == 1 && col == 0)
         {
-            if(pioneer.direction0==0){
-                std::cout<<"entra1"<<std::endl;
+            if(direction==Pioneer::FORWARD){          
+            pioneer.go_forward();
+            }
+            else if(direction==Pioneer::LEFT){      
+            pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.go_forward();          
+            }
+            else if(direction==Pioneer::RIGHT){
+            pioneer.turn_back45();
+            pioneer.stop();
+            pioneer.turn_back45();
+            pioneer.stop();
             pioneer.go_forward();
             }
             else{
-                std::cout<<"entra2"<<std::endl;
             pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.go_forward();                
             }
             
             
         }
         else if (row == 1 && col == 1)
         {
-            
-            pioneer.turn_back45();
-            pioneer.upgrade();
-            sleep(3);
-            pioneer.go_diag();
-            pioneer.upgrade();
-            sleep(3);
+            if(direction==Pioneer::FORWARD){
+            //pioneer.turn_for45();
             pioneer.turn_for45();
-            
+            pioneer.stop();
+            pioneer.go_diag();
+            pioneer.stop();
+            pioneer.turn_back45();
+            }
+            else if(direction==Pioneer::LEFT){
+            pioneer.turn_back45();
+            pioneer.stop();
+            pioneer.go_diag();
+            pioneer.stop();
+            pioneer.turn_back45();
+
+            }
+            else if(direction==Pioneer::RIGHT){
+            pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.go_diag();
+            pioneer.stop();
+            pioneer.turn_back45();
+
+            }
+            else{
+
+            }
 
         }
         else if (row == 0 && col == 1)
         {
-            
+            if(direction==Pioneer::FORWARD){
+            pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.turn_for45();
+            pioneer.stop();
+            pioneer.go_forward();
+            direction==Pioneer::LEFT;
+           
+            }
+            else if(direction==Pioneer::LEFT){    
+                pioneer.go_forward();
+            }
            
         }
 
@@ -404,8 +457,9 @@ int main(int argc, char **argv)
         }
 
         cnt--;
-        pioneer.upgrade();
-        sleep(3);
+        pioneer.stop();
+
+
     }
 
     return 0;
