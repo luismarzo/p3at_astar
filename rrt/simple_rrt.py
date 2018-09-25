@@ -11,18 +11,18 @@ import math
 import copy
 
 show_animation = True
-min_ejex=-9
-max_ejex=2
-min_ejey=-2
-max_ejey=9
+min_ejex = -17
+max_ejex = 2
+min_ejey = -2
+max_ejey = 14
+
 
 class RRT():
     """
     Class for RRT Planning
     """
 
-    def __init__(self, start, goal, obstacleList,
-                 randArea, expandDis=0.5, goalSampleRate=10, maxIter=500):       #cuanto mas alto el goalSampleRate más directo va
+    def __init__(self, start, goal, obstacleList,randArea, expandDis=0.8, goalSampleRate=15, maxIter=500):  # cuanto mas alto el goalSampleRate mas directo va
         """
         Setting Parameter
 
@@ -107,7 +107,7 @@ class RRT():
         for node in self.nodeList:
             if node.parent is not None:
                 plt.plot([node.x, self.nodeList[node.parent].x], [
-                         node.y, self.nodeList[node.parent].y], "-g")
+                         node.y, self.nodeList[node.parent].y], "-y")
 
         for (ox, oy, size) in self.obstacleList:
             plt.plot(ox, oy, "sg", ms=30 * size)
@@ -155,51 +155,111 @@ def main():
         (1, -1, 0.8),
         (1, 0, 0.8),
         (1, 1, 0.8),
-	(1, 2, 0.8),
-	(1, 3, 0.8),
-	(1, 4, 0.8),
-	(1, 5, 0.8),
-	(1, 6, 0.8),
-	(1, 7, 0.8),
-	(1, 8, 0.8),
-	(1, 9, 0.8),
+        (1, 2, 0.8),
+        (1, 3, 0.8),
+        (1, 4, 0.8),
+        (1, 5, 0.8),
+        (1, 6, 0.8),
+        (1, 7, 0.8),
+        (1, 8, 0.8),
+        (1, 9, 0.8),
+        (1, 10, 0.8),
+        (1, 11, 0.8),
+        (1, 12, 0.8),
+        (1, 13, 0.8),
+        (-16, 0, 0.8),
+        (-16, 1, 0.8),
+        (-16, 2, 0.8),
+        (-16, 3, 0.8),
+        (-16, 4, 0.8),
+        (-16, 5, 0.8),
+        (-16, 6, 0.8),
+        (-16, 7, 0.8),
+        (-16, 8, 0.8),
+        (-16, 9, 0.8),
+        (-16, 10, 0.8),
+        (-16, 11, 0.8),
+        (-16, 12, 0.8),
+        (-16, 13, 0.8),        
         (0, -1, 0.8),
-	(-1, -1, 0.8),
-	(-2, -1, 0.8),
-	(-3, -1, 0.8),
-	(-4, -1, 0.8),
-	(-5, -1, 0.8),
-	(-6, -1, 0.8),
-	(-7, -1, 0.8),
-	(-8, -1, 0.8),
-	(-9, -1, 0.8),
-	(-7, 0, 0.8),
-	(-7, 1, 0.8),
-	(-7, 2, 0.8),
-	(-7, 3, 0.8),
-	(-7, 4, 0.8),
-	(-7, 5, 0.8),
-	(-7, 6, 0.8),
-	(-7, 7, 0.8),
-	(8, 8, 0.8),
-	(-7, 8, 0.8),
-	(-6, 8, 0.8),
-	(-5, 8, 0.8),
-	(-4, 8, 0.8),
-	(-3, 8, 0.8)
+        (-1, -1, 0.8),
+        (-2, -1, 0.8),
+        (-3, -1, 0.8),
+        (-4, -1, 0.8),
+        (-5, -1, 0.8),
+        (-6, -1, 0.8),
+        (-7, -1, 0.8),
+        (-8, -1, 0.8),
+        (-9, -1, 0.8),
+        (-10, -1, 0.8),
+        (-11, -1, 0.8),
+        (-12, -1, 0.8),
+        (-13, -1, 0.8),
+        (-14, -1, 0.8),
+        (-15, -1, 0.8),
+        (-16, -1, 0.8),
+        (-1, 13, 0.8),
+        (-2, 13, 0.8),
+        (-3, 13, 0.8),
+        (-4, 13, 0.8),
+        (-5, 13, 0.8),
+        (-6, 13, 0.8),
+        (-7, 13, 0.8),
+        (-8, 13, 0.8),
+        (-9, 13, 0.8),
+        (-10, 13, 0.8),
+        (-11, 13, 0.8),
+        (-12, 13, 0.8),
+        (-13, 13, 0.8),
+        (-14, 13, 0.8),
+        (-15, 13, 0.8),
+        (-16, 13, 0.8),
+        (-7, 0, 0.8),
+        (-7, 1, 0.8),
+        (-7, 2, 0.8),
+        (-7, 3, 0.8),
+        (-7, 4, 0.8),
+        (-7, 5, 0.8),
+        (-7, 6, 0.8),
+        (-7, 7, 0.8),
+        (8, 8, 0.8),
+        (-7, 8, 0.8),
+        (-6, 8, 0.8),
+        (-5, 8, 0.8),
+        (-4, 8, 0.8),
+        (-10, 8, 0.8),
+        (-10, 9, 0.8),
+        (-10, 10, 0.8),
+        (-10, 11, 0.8),   
+        (-10, 12, 0.8),
+        (-10, 8, 0.8), 
+        (-11, 8, 0.8),
+        (-12, 8, 0.8),
+        (0, 13, 0.8),  
+        (-7, 4, 0.8), 
+        (-8, 4, 0.8),
+        (-9, 4, 0.8),
+        (-10, 4, 0.8),
+        (-11, 4, 0.8),
+        (-12, 4, 0.8),
+        (-13, 4, 0.8),
+        (-14, 4, 0.8),
+        (-11, 0, 0.8), 
+        (-11, 1, 0.8),
+        (-3, 8, 0.8)
 
     ]  # [x,y,size]
     # Set Initial parameters
-    rrt = RRT(start=[0, 0], goal=[0, 8],
+    rrt = RRT(start=[0, 0], goal=[-9, 1],
               randArea=[min_ejex, max_ejey], obstacleList=obstacleList)
     path = rrt.Planning(animation=show_animation)
 
     # Draw final path
     if show_animation:
         rrt.DrawGraph()
-        plt.plot([x for (x, y) in path], [y for (x, y) in path], '-m')
-	print([x for (x, y) in path])
-	print([y for (x, y) in path])
+        plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
+        print([x for (x, y) in path])
+        #print([y for (x, y) in path])
         plt.grid(True)
         plt.show()
 
