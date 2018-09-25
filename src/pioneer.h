@@ -66,7 +66,8 @@ class Pioneer
 	void turn_back45()
 	{std::cout<<"back45"<<std::endl;
 		msg.linear.x = 0;
-		msg.angular.z = -0.498;
+		//msg.angular.z = -0.498;
+		msg.angular.z = -0.6;
 		upgrade();
 	}
 
