@@ -356,10 +356,10 @@ int main(int argc, char **argv)
     pioneer.stop();
     pioneer.upgrade();
     sleep(3);
-
+    char key;
     while (ros::ok())
     {
-        if (cnt < 0)
+        /*if (cnt < 0)
         {
             break;
         }
@@ -459,7 +459,35 @@ int main(int argc, char **argv)
         cnt--;
         pioneer.stop();
 
+*/
 
+std::cout<<"forward: w, backward: s, left: a, right:d"<<std::endl;
+std::cin>>key;
+switch (key)
+		{
+		case 'w':
+			pioneer.go_forward();
+			break;
+		case 's':
+			pioneer.go_backward();
+			break;
+		case 'a':
+			pioneer.turn_for45();
+			break;
+		case 'd':
+			pioneer.turn_back45();
+			break;
+        case 'q':
+			pioneer.turn_back45();
+			break;
+        case 'e':
+			pioneer.go_diag();
+			break;
+		
+		default:
+			std::cout << "Repeat key\n"<< std::endl;
+		}
+        pioneer.stop();
     }
 
     return 0;
