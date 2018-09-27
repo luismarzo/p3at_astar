@@ -37,21 +37,21 @@ class Pioneer
 
 	void go_forward()
 	{	std::cout<<"forward"<<std::endl;
-		msg.linear.x = 0.505;
+		msg.linear.x = 0.554;
 		msg.angular.z = 0;
 		upgrade();
 	}
 
 	void go_backward()
 	{	std::cout<<"backward"<<std::endl;
-		msg.linear.x = -0.505;
+		msg.linear.x = -0.554;
 		msg.angular.z = 0;
 		upgrade();
 	}
 
 	void go_diag()
 	{	std::cout<<"diag"<<std::endl;
-		msg.linear.x = 0.636;
+		msg.linear.x = 0.83;
 		msg.angular.z = 0;
 		upgrade();
 	}
@@ -59,7 +59,7 @@ class Pioneer
 	void turn_for45()
 	{	std::cout<<"turn45"<<std::endl;
 		msg.linear.x = 0;
-		msg.angular.z = 0.67;
+		msg.angular.z = 0.521;
 		upgrade();
 	}
 
@@ -67,7 +67,7 @@ class Pioneer
 	{std::cout<<"back45"<<std::endl;
 		msg.linear.x = 0;
 		//msg.angular.z = -0.498;
-		msg.angular.z = -0.67;
+		msg.angular.z = -0.521;
 		upgrade();
 	}
 
@@ -79,7 +79,7 @@ class Pioneer
 	}
 
 	void upgrade()
-	{	std::cout<<"publishing: linear:"<<msg.linear.x<<" and angular:"<<msg.angular.z<<std::endl;
+	{	//std::cout<<"publishing: linear:"<<msg.linear.x<<" and angular:"<<msg.angular.z<<std::endl;
 		pub.publish(msg);
 		ros::spinOnce();
 		sleep(3);

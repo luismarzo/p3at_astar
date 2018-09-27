@@ -1,1 +1,0 @@
-/usr/bin/c++    -std=c++11   CMakeFiles/new_a_star.dir/source/new_a_star.cpp.o  -o new_a_star -rdynamic liba-star.a 
