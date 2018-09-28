@@ -37,21 +37,21 @@ class Pioneer
 
 	void go_forward()
 	{	std::cout<<"forward"<<std::endl;
-		msg.linear.x = 0.554;
+		msg.linear.x = 0.425;
 		msg.angular.z = 0;
 		upgrade();
 	}
 
 	void go_backward()
 	{	std::cout<<"backward"<<std::endl;
-		msg.linear.x = -0.554;
+		msg.linear.x = -0.425;
 		msg.angular.z = 0;
 		upgrade();
 	}
 
 	void go_diag()
 	{	std::cout<<"diag"<<std::endl;
-		msg.linear.x = 0.83;
+		msg.linear.x = 0.586;
 		msg.angular.z = 0;
 		upgrade();
 	}
@@ -59,7 +59,7 @@ class Pioneer
 	void turn_for45()
 	{	std::cout<<"turn45"<<std::endl;
 		msg.linear.x = 0;
-		msg.angular.z = 0.521;
+		msg.angular.z = 0.3808;
 		upgrade();
 	}
 
@@ -67,7 +67,7 @@ class Pioneer
 	{std::cout<<"back45"<<std::endl;
 		msg.linear.x = 0;
 		//msg.angular.z = -0.498;
-		msg.angular.z = -0.521;
+		msg.angular.z = -0.3808;
 		upgrade();
 	}
 

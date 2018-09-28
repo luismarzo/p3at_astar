@@ -55,8 +55,8 @@ char map[map_size_rows][map_size_cols] = {
     {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
@@ -370,7 +370,7 @@ int main(int argc, char **argv)
             else if (direction == Pioneer::LEFT)
             {
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_forward();
@@ -378,17 +378,17 @@ int main(int argc, char **argv)
             else if (direction == Pioneer::RIGHT)
             {
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
-                pioneer.stop();
+               pioneer.stop();
                 pioneer.go_forward();
             }
             else
             {
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_forward();
@@ -403,7 +403,7 @@ int main(int argc, char **argv)
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_diag();
-                pioneer.stop();
+                 pioneer.stop();
                 pioneer.turn_back45();
             }
             else if (direction == Pioneer::LEFT)
@@ -417,9 +417,9 @@ int main(int argc, char **argv)
             else if (direction == Pioneer::RIGHT)
             {
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
-                pioneer.stop();
+               // pioneer.stop();
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_diag();
@@ -429,9 +429,9 @@ int main(int argc, char **argv)
             else
             {
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
-                pioneer.stop();
+               // pioneer.stop();
                 pioneer.turn_back45();
                 pioneer.stop();
                 pioneer.go_diag();
@@ -446,11 +446,11 @@ int main(int argc, char **argv)
             if (direction == Pioneer::FORWARD)
             {
                 pioneer.turn_for45();
-                pioneer.stop();
+               // pioneer.stop();
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_forward();
-                direction == Pioneer::LEFT;
+                
             }
             else if (direction == Pioneer::LEFT)
             {
@@ -459,11 +459,11 @@ int main(int argc, char **argv)
             else if (direction == Pioneer::RIGHT)
             {
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_forward();
@@ -471,7 +471,7 @@ int main(int argc, char **argv)
             else
             {
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
                 pioneer.stop();
                 pioneer.go_forward();
@@ -497,11 +497,11 @@ int main(int argc, char **argv)
             else if (direction == Pioneer::LEFT)
             {
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
                 pioneer.stop();
                 pioneer.go_forward();
@@ -523,11 +523,11 @@ int main(int argc, char **argv)
             if (direction == Pioneer::FORWARD)
             {
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
                 pioneer.stop();
                 pioneer.go_forward();
@@ -535,7 +535,7 @@ int main(int argc, char **argv)
             else if (direction == Pioneer::RIGHT)
             {
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
                 pioneer.stop();
                 pioneer.go_forward();
@@ -543,7 +543,7 @@ int main(int argc, char **argv)
             else if (direction == Pioneer::LEFT)
             {
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_forward();
@@ -560,9 +560,9 @@ int main(int argc, char **argv)
             if (direction == Pioneer::FORWARD)
             {
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_diag();
@@ -572,12 +572,13 @@ int main(int argc, char **argv)
             else if (direction == Pioneer::RIGHT)
             {
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
                 pioneer.stop();
                 pioneer.go_diag();
+               pioneer.stop();
                 pioneer.turn_back45();
             }
             else if (direction == Pioneer::LEFT)
@@ -585,7 +586,7 @@ int main(int argc, char **argv)
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_diag();
-                pioneer.stop();
+               pioneer.stop();
                 pioneer.turn_back45();
             }
             else
@@ -622,21 +623,22 @@ int main(int argc, char **argv)
             else if (direction == Pioneer::LEFT)
             {
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
                 pioneer.stop();
                 pioneer.go_diag();
+                pioneer.stop();
                 pioneer.turn_back45();
             }
             else
             {
 
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_diag();
@@ -652,12 +654,13 @@ int main(int argc, char **argv)
             if (direction == Pioneer::FORWARD)
             {
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_back45();
                 pioneer.stop();
                 pioneer.go_diag();
+               pioneer.stop();
                 pioneer.turn_back45();
             }
             else if (direction == Pioneer::RIGHT)
@@ -682,19 +685,16 @@ int main(int argc, char **argv)
             {
 
                 pioneer.turn_for45();
-                pioneer.stop();
+                //pioneer.stop();
                 pioneer.turn_for45();
-                pioneer.stop();
-                pioneer.turn_for45();
-                pioneer.stop();
-                pioneer.go_diag();
-                pioneer.stop();
-                pioneer.turn_back45();
+                //pioneer.stop();
                 pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_diag();
                 pioneer.stop();
                 pioneer.turn_back45();
+                //pioneer.stop()
+                
             }
 
             direction = Pioneer::BACKWARD;
@@ -706,7 +706,7 @@ int main(int argc, char **argv)
         }
 
         cnt--;
-        pioneer.stop();
+        //pioneer.stop();
     }
     return 0;
 }

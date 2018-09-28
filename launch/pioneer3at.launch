@@ -5,7 +5,7 @@
 
   
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-	<arg name="world_name" value="$(find pioneer3at)/worlds/mazee.world" />
+	<arg name="world_name" value="$(find pioneer3at)/worlds/mazee_1.world" />
   </include>
 
   <arg name="urdf" default="$(find pioneer3at)/urdf/pioneer3at.urdf" />
