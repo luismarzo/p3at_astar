@@ -25,7 +25,8 @@ class RRT():
     Class for RRT Planning
     """
 
-    def __init__(self, start, goal, obstacleList,randArea, expandDis=0.8, goalSampleRate=15, maxIter=500):  # cuanto mas alto el goalSampleRate mas directo va
+    # cuanto mas alto el goalSampleRate mas directo va
+    def __init__(self, start, goal, obstacleList, randArea, expandDis=0.8, goalSampleRate=15, maxIter=500):
         """
         Setting Parameter
 
@@ -139,8 +140,6 @@ class RRT():
         return True  # safe
 
 
-
-
 class Node():
     """
     RRT Node
@@ -185,7 +184,7 @@ def main():
         (-16, 10, 0.8),
         (-16, 11, 0.8),
         (-16, 12, 0.8),
-        (-16, 13, 0.8),        
+        (-16, 13, 0.8),
         (0, -1, 0.8),
         (-1, -1, 0.8),
         (-2, -1, 0.8),
@@ -235,13 +234,13 @@ def main():
         (-10, 8, 0.8),
         (-10, 9, 0.8),
         (-10, 10, 0.8),
-        (-10, 11, 0.8),   
+        (-10, 11, 0.8),
         (-10, 12, 0.8),
-        (-10, 8, 0.8), 
+        (-10, 8, 0.8),
         (-11, 8, 0.8),
         (-12, 8, 0.8),
-        (0, 13, 0.8),  
-        (-7, 4, 0.8), 
+        (0, 13, 0.8),
+        (-7, 4, 0.8),
         (-8, 4, 0.8),
         (-9, 4, 0.8),
         (-10, 4, 0.8),
@@ -249,7 +248,7 @@ def main():
         (-12, 4, 0.8),
         (-13, 4, 0.8),
         (-14, 4, 0.8),
-        (-11, 0, 0.8), 
+        (-11, 0, 0.8),
         (-11, 1, 0.8),
         (-3, 8, 0.8)
 
@@ -258,40 +257,55 @@ def main():
     rrt = RRT(start=[0, 0], goal=[-2, 6],
               randArea=[min_ejex, max_ejey], obstacleList=obstacleList)
     path = rrt.Planning(animation=show_animation)
-    
+
     # Draw final path
     if show_animation:
         rrt.DrawGraph()
         plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
         #print([x for (x, y) in path])
         #print([y for (x, y) in path])
-	#print path
+        #print path
         plt.grid(True)
         publisher(path)
         plt.show()
-        
+
 
 def publisher(path):
     pub = rospy.Publisher('python_talker', Float64, queue_size=10)
-    rospy.init_node('python_talker', anonymous=True)
-    rate = rospy.Rate(10) # 10hz
-    xx=([x for (x, y) in path])	
-    yy=([y for (x, y) in path])
-    print(len(xx))
-    #while not rospy.is_shutdown():
+    rospy.init_node('python_talker', anonymous=True, disable_signals=True)
+    rate = rospy.Rate(10)  # 10hz
+    xx = ([x for (x, y) in path])
+    yy = ([y for (x, y) in path])
+    #print(len(xx))
+    msg = 0   #publico dos mensajes vacios porque en C no recibe los dos primeros mensajes
+    rospy.loginfo(msg)
+    pub.publish(msg)
+    rate.sleep()
+    msg = 0
+    rospy.loginfo(msg)
+    pub.publish(msg)
+    rate.sleep()
+    msg = len(xx)+len(yy)
+    rospy.loginfo(msg)
+    pub.publish(msg)
+    rate.sleep()
+
+
+
+    # while not rospy.is_shutdown():
     for i in range(len(xx)):
-   	 msg = xx[i]
-   	 rospy.loginfo(msg)
-   	 pub.publish(msg)
-   	 rate.sleep()
+        msg = xx[i]
+        rospy.loginfo(msg)
+        pub.publish(msg)
+        rate.sleep()
     for i in range(len(xx)):
-   	 msg = yy[i]
-   	 rospy.loginfo(msg)
-   	 pub.publish(msg)
-   	 rate.sleep()
+        msg = yy[i]
+        rospy.loginfo(msg)
+        pub.publish(msg)
+        rate.sleep()
+    rospy.signal_shutdown("lol")
 
 
 if __name__ == '__main__':
     main()
-    #talker()
-
+    # talker()

@@ -20,10 +20,10 @@ include_directories(
 )
 
 
-add_executable(astar_gazebo "src/astar_gazebo.cpp")
-target_link_libraries(astar_gazebo ${catkin_LIBRARIES})
+add_executable(path_planning "src/path_planning.cpp")
+target_link_libraries(path_planning ${catkin_LIBRARIES})
 include_directories(PUBLIC ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/include)
-add_dependencies(astar_gazebo pioneer3at_generate_messages_cpp)
+add_dependencies(path_planning pioneer3at_generate_messages_cpp)
 
 add_executable(keyboard_control "src/keyboard_control.cpp")
 target_link_libraries(keyboard_control ${catkin_LIBRARIES})
