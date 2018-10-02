@@ -276,7 +276,7 @@ def publisher(path):
     rate = rospy.Rate(10)  # 10hz
     xx = ([x for (x, y) in path])
     yy = ([y for (x, y) in path])
-    #print(len(xx))
+    print(len(xx))
     msg = 0   #publico dos mensajes vacios porque en C no recibe los dos primeros mensajes
     rospy.loginfo(msg)
     pub.publish(msg)
@@ -289,8 +289,6 @@ def publisher(path):
     rospy.loginfo(msg)
     pub.publish(msg)
     rate.sleep()
-
-
 
     # while not rospy.is_shutdown():
     for i in range(len(xx)):

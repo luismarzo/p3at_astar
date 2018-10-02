@@ -24,15 +24,21 @@ class Pioneer
 	enum direction { FORWARD, BACKWARD, LEFT, RIGHT };
 
 	Pioneer(int argc, char **argv)
-	{
-		ros::init(argc, argv, "a_star_publisher");
+	{ros::init(argc, argv, "listener");
+		std::cout << "entra" << std::endl;
 		ros::NodeHandle n;
+		std::cout << "nodehandler" << std::endl;
 		pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1000);
+		std::cout << "publicador" << std::endl;
 		ros::Rate loop_rate();
+		std::cout << "looprate" << std::endl;
 		msg.linear.x = 0;
 		msg.angular.z = 0; //inicialización
+		std::cout << "1publisher" << std::endl;
 		pub.publish(msg);
+		std::cout << "publisher" << std::endl;
 		ros::spinOnce();
+		std::cout << "spiniiiiii" << std::endl;
 	};
 
 	void go_forward()

@@ -15,6 +15,7 @@
 #define map_size_rows 15 //30
 #define map_size_cols 18 //25
 
+void move_pioneer(int argc, char **argv, int len, int col[50], int row[50]);
 char map[map_size_rows][map_size_cols] = {
     /*{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
@@ -105,23 +106,32 @@ struct route
 float x_vector[200];
 int cnt_vector = 0;
 int longitud_vector = 0;
-void chatterCallback(const std_msgs::Float64::ConstPtr &msg)
+int flag_cero_subscriptor = 0;
+void chatterCallback(const std_msgs::Float64::ConstPtr &msgs)
 {
-    ROS_INFO("I heard: [%f]", msg->data);
-    if (cnt_vector == 0)
+    ROS_INFO("I heard: [%f]", msgs->data);
+    if (msgs->data == 0 && flag_cero_subscriptor == 0)
     {
-        longitud_vector = msg->data;
-        printf("la longitud del vector es %d\n", longitud_vector);
+        //do nothing
     }
     else
     {
-        x_vector[cnt_vector-1] = msg->data;
-    }
+        flag_cero_subscriptor = 1;
+        if (cnt_vector == 0)
+        {
+            longitud_vector = msgs->data;
+            printf("la longitud del vector es %d\n", longitud_vector);
+        }
+        else
+        {
+            x_vector[cnt_vector - 1] = msgs->data;
+        }
 
-    cnt_vector++;
-    if (cnt_vector == longitud_vector + 1)
-    { //el +3 es porque los primeros mensajes no los consigue leer de phyton
-        ros::shutdown();
+        cnt_vector++;
+        if (cnt_vector == longitud_vector + 1)
+        { //el +3 es porque los primeros mensajes no los consigue leer de phyton
+            ros::shutdown();
+        }
     }
 }
 
@@ -136,6 +146,8 @@ int main(int argc, char **argv)
     printf("\n");
     printf("                       GRVC                       \n");
     printf("//////////////////////////////////////////////////\n\n");
+
+    ros::init(argc, argv, "a_star_publisher");
 
     char path_key;
     printf("What do you want to use: [A*:a , RRT:r]\n");
@@ -382,386 +394,26 @@ int main(int argc, char **argv)
         // free(path);
         // free(open);
         // free(closed);
-
-        int cnt = p_len - 1; //es 41
-        std::cout << cnt << std::endl;
-        int col = 0, row = 0;
-
-        Pioneer pioneer(argc, argv);
-
-        Pioneer::direction direction = Pioneer::FORWARD;
-
-        pioneer.stop();
-        pioneer.upgrade();
-        sleep(3);
-        char key;
-        while (ros::ok())
+        int cnt = p_len - 1;
+        int col[cnt], row[cnt];
+        while (cnt >= 0)
         {
-            if (cnt < 0)
-            {
-                break;
-            }
-
-            col = stops[path[cnt - 1]].col - stops[path[cnt]].col;
-            row = stops[path[cnt - 1]].row - stops[path[cnt]].row;
-            std::cout << row << " y " << col << "cnt es:" << cnt << std::endl;
-            std::cout << direction << std::endl;
-            if (row == 1 && col == 0)
-            {
-                if (direction == Pioneer::FORWARD)
-                {
-                    pioneer.go_forward();
-                }
-                else if (direction == Pioneer::LEFT)
-                {
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                else if (direction == Pioneer::RIGHT)
-                {
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                else
-                {
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                direction = Pioneer::FORWARD;
-            }
-            else if (row == 1 && col == 1)
-            {
-                if (direction == Pioneer::FORWARD)
-                {
-                    //pioneer.turn_for45();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else if (direction == Pioneer::LEFT)
-                {
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else if (direction == Pioneer::RIGHT)
-                {
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    // pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else
-                {
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    // pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_for45();
-                }
-                direction = Pioneer::FORWARD;
-            }
-            else if (row == 0 && col == 1)
-            {
-
-                if (direction == Pioneer::FORWARD)
-                {
-                    pioneer.turn_for45();
-                    // pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                else if (direction == Pioneer::LEFT)
-                {
-                    pioneer.go_forward();
-                }
-                else if (direction == Pioneer::RIGHT)
-                {
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                else
-                {
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-
-                direction = Pioneer::LEFT;
-            }
-
-            else if (row == 0 && col == -1)
-            {
-                if (direction == Pioneer::FORWARD)
-                {
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                else if (direction == Pioneer::RIGHT)
-                {
-                    pioneer.go_forward();
-                }
-                else if (direction == Pioneer::LEFT)
-                {
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                else
-                {
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-
-                direction = Pioneer::RIGHT;
-            }
-
-            else if (row == -1 && col == 0)
-            {
-                if (direction == Pioneer::FORWARD)
-                {
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                else if (direction == Pioneer::RIGHT)
-                {
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                else if (direction == Pioneer::LEFT)
-                {
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_forward();
-                }
-                else
-                {
-                    pioneer.go_forward();
-                }
-
-                direction = Pioneer::BACKWARD;
-            }
-            else if (row == -1 && col == 1)
-            {
-                if (direction == Pioneer::FORWARD)
-                {
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else if (direction == Pioneer::RIGHT)
-                {
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else if (direction == Pioneer::LEFT)
-                {
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else
-                {
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-
-                direction = Pioneer::LEFT;
-            }
-
-            else if (row == 1 && col == -1)
-            {
-                if (direction == Pioneer::FORWARD)
-                {
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else if (direction == Pioneer::RIGHT)
-                {
-
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else if (direction == Pioneer::LEFT)
-                {
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else
-                {
-
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-
-                direction = Pioneer::RIGHT;
-            }
-
-            else if (row == -1 && col == -1)
-            {
-                if (direction == Pioneer::FORWARD)
-                {
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    //pioneer.stop();
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else if (direction == Pioneer::RIGHT)
-                {
-
-                    pioneer.turn_back45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else if (direction == Pioneer::LEFT)
-                {
-
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                }
-                else
-                {
-
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    //pioneer.stop();
-                    pioneer.turn_for45();
-                    pioneer.stop();
-                    pioneer.go_diag();
-                    pioneer.stop();
-                    pioneer.turn_back45();
-                    //pioneer.stop()
-                }
-
-                direction = Pioneer::BACKWARD;
-            }
-
-            else
-            {
-                pioneer.stop();
-            }
-
+            col[cnt] = stops[path[cnt - 1]].col - stops[path[cnt]].col;
+            row[cnt] = stops[path[cnt - 1]].row - stops[path[cnt]].row;
             cnt--;
-            //pioneer.stop();
         }
+        move_pioneer(argc, argv, p_len, col, row);
     }
     else if (path_key == 'r')
     {
 
         int h;
-        ros::init(argc, argv, "listener");
-        ros::NodeHandle n;
-        ros::Subscriber sub = n.subscribe("python_talker", 1000, chatterCallback);
+        //ros::init(argc, argv, "listener");
+        ros::NodeHandle m;
+        ros::Subscriber sub = m.subscribe("python_talker", 1000, chatterCallback);
         ros::spin();
         //sleep(10);
-        for (h = 0; h <= longitud_vector-1; h++)
+        for (h = 0; h <= longitud_vector - 1; h++)
         {
             printf("v:%f\n", x_vector[h]);
         }
@@ -769,9 +421,9 @@ int main(int argc, char **argv)
         double dec[longitud_vector + 1];
         int int_dec[longitud_vector + 1];
         int i;
-        for (i = 0; i <= longitud_vector-1; i++)
+        for (i = 0; i <= longitud_vector - 1; i++)
         {
-            int_dec[i] = x_vector[i];           //SACAR EL NUMERO ENTERO DEL FLOTANTE
+            int_dec[i] = x_vector[i];          //SACAR EL NUMERO ENTERO DEL FLOTANTE
             dec[i] = x_vector[i] - int_dec[i]; //SACAR LA PARTE DECIMAL DEL FLOTANTE
             //printf("parte entera: %d\n", int_dec);
             //printf("parte decimal: %lf\n\n", dec);
@@ -798,9 +450,391 @@ int main(int argc, char **argv)
                     int_dec[i] = int_dec[i] - 1;
                 }
             }
-            printf("int_dec=%d\n", int_dec[i]);
+            //printf("int_dec=%d\n", int_dec[i]);
         }
+        int col_v[longitud_vector], row_v[longitud_vector];
+        for (i = 0; i < longitud_vector / 2; i++)
+        {
+            col_v[i] = int_dec[i];
+            printf("col:%d\n", col_v[i]);
+        }
+        for (i = (longitud_vector / 2); i < longitud_vector; i++)
+        {
+            row_v[i] = int_dec[i];
+            printf("row:%d\n", row_v[i]);
+        }
+        
+        move_pioneer(argc, argv, longitud_vector, col_v, row_v);
     }
 
     return 0;
+}
+
+void move_pioneer(int argc, char **argv, int len, int col[50], int row[50])
+{
+    int cnt = len - 1; //es 41
+    std::cout << cnt << std::endl;
+    
+    Pioneer pioneer(argc, argv);
+
+    Pioneer::direction direction = Pioneer::FORWARD;
+
+    pioneer.stop();
+    pioneer.upgrade();
+    sleep(3);
+    char key;
+    while (ros::ok())
+    {
+        if (cnt < 0)
+        {
+            break;
+        }
+
+        std::cout << row[cnt] << " y " << col[cnt] << "cnt es:" << cnt << std::endl;
+        std::cout << direction << std::endl;
+        if (row[cnt] == 1 && col[cnt] == 0)
+        {
+            if (direction == Pioneer::FORWARD)
+            {
+                pioneer.go_forward();
+            }
+            else if (direction == Pioneer::LEFT)
+            {
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            else if (direction == Pioneer::RIGHT)
+            {
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            else
+            {
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            direction = Pioneer::FORWARD;
+        }
+        else if (row[cnt] == 1 && col[cnt] == 1)
+        {
+            if (direction == Pioneer::FORWARD)
+            {
+                //pioneer.turn_for45();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else if (direction == Pioneer::LEFT)
+            {
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else if (direction == Pioneer::RIGHT)
+            {
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                // pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else
+            {
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                // pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_for45();
+            }
+            direction = Pioneer::FORWARD;
+        }
+        else if (row[cnt] == 0 && col[cnt] == 1)
+        {
+
+            if (direction == Pioneer::FORWARD)
+            {
+                pioneer.turn_for45();
+                // pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            else if (direction == Pioneer::LEFT)
+            {
+                pioneer.go_forward();
+            }
+            else if (direction == Pioneer::RIGHT)
+            {
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            else
+            {
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+
+            direction = Pioneer::LEFT;
+        }
+
+        else if (row[cnt] == 0 && col[cnt] == -1)
+        {
+            if (direction == Pioneer::FORWARD)
+            {
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            else if (direction == Pioneer::RIGHT)
+            {
+                pioneer.go_forward();
+            }
+            else if (direction == Pioneer::LEFT)
+            {
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            else
+            {
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+
+            direction = Pioneer::RIGHT;
+        }
+
+        else if (row[cnt] == -1 && col[cnt] == 0)
+        {
+            if (direction == Pioneer::FORWARD)
+            {
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            else if (direction == Pioneer::RIGHT)
+            {
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            else if (direction == Pioneer::LEFT)
+            {
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_forward();
+            }
+            else
+            {
+                pioneer.go_forward();
+            }
+
+            direction = Pioneer::BACKWARD;
+        }
+        else if (row[cnt] == -1 && col[cnt] == 1)
+        {
+            if (direction == Pioneer::FORWARD)
+            {
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else if (direction == Pioneer::RIGHT)
+            {
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else if (direction == Pioneer::LEFT)
+            {
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else
+            {
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+
+            direction = Pioneer::LEFT;
+        }
+
+        else if (row[cnt] == 1 && col[cnt] == -1)
+        {
+            if (direction == Pioneer::FORWARD)
+            {
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else if (direction == Pioneer::RIGHT)
+            {
+
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else if (direction == Pioneer::LEFT)
+            {
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else
+            {
+
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+
+            direction = Pioneer::RIGHT;
+        }
+
+        else if (row[cnt] == -1 && col[cnt] == -1)
+        {
+            if (direction == Pioneer::FORWARD)
+            {
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                //pioneer.stop();
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else if (direction == Pioneer::RIGHT)
+            {
+
+                pioneer.turn_back45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else if (direction == Pioneer::LEFT)
+            {
+
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+            }
+            else
+            {
+
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                //pioneer.stop();
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
+                //pioneer.stop()
+            }
+
+            direction = Pioneer::BACKWARD;
+        }
+
+        else
+        {
+            pioneer.stop();
+        }
+
+        cnt--;
+        //pioneer.stop();
+    }
 }
