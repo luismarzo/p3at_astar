@@ -107,6 +107,7 @@ float x_vector[200];
 int cnt_vector = 0;
 int longitud_vector = 0;
 int flag_cero_subscriptor = 0;
+bool should_continue = 1;
 void chatterCallback(const std_msgs::Float64::ConstPtr &msgs)
 {
     ROS_INFO("I heard: [%f]", msgs->data);
@@ -130,7 +131,12 @@ void chatterCallback(const std_msgs::Float64::ConstPtr &msgs)
         cnt_vector++;
         if (cnt_vector == longitud_vector + 1)
         { //el +3 es porque los primeros mensajes no los consigue leer de phyton
-            ros::shutdown();
+
+            std::cout << "quiro salir" << std::endl;
+            should_continue = 0;
+            //ros::shutdown();
+            //std::cout << sub.getTopic() << std::endl;
+            //sub.shutdown();
         }
     }
 }
@@ -400,6 +406,8 @@ int main(int argc, char **argv)
         {
             col[cnt] = stops[path[cnt - 1]].col - stops[path[cnt]].col;
             row[cnt] = stops[path[cnt - 1]].row - stops[path[cnt]].row;
+            std::cout << "col[" << cnt << "]:" << col[cnt] << std::endl;
+            std::cout << "row[" << cnt << "]:" << row[cnt] << std::endl;
             cnt--;
         }
         move_pioneer(argc, argv, p_len, col, row);
@@ -411,8 +419,15 @@ int main(int argc, char **argv)
         //ros::init(argc, argv, "listener");
         ros::NodeHandle m;
         ros::Subscriber sub = m.subscribe("python_talker", 1000, chatterCallback);
-        ros::spin();
-        //sleep(10);
+        //ros::spin();
+
+        ros::Rate r(10); // 10 hz
+        while (should_continue)
+        {
+            ros::spinOnce();
+            r.sleep();
+        }
+
         for (h = 0; h <= longitud_vector - 1; h++)
         {
             printf("v:%f\n", x_vector[h]);
@@ -456,15 +471,41 @@ int main(int argc, char **argv)
         for (i = 0; i < longitud_vector / 2; i++)
         {
             col_v[i] = int_dec[i];
-            printf("col:%d\n", col_v[i]);
+            printf("col[%d]:%d\n", i, col_v[i]);
         }
         for (i = (longitud_vector / 2); i < longitud_vector; i++)
         {
-            row_v[i] = int_dec[i];
-            printf("row:%d\n", row_v[i]);
+            row_v[i - (longitud_vector / 2)] = int_dec[i];
+            printf("row[%d]:%d\n", i - (longitud_vector / 2), row_v[i - (longitud_vector / 2)]);
         }
-        
-        move_pioneer(argc, argv, longitud_vector, col_v, row_v);
+
+        //normalizamos para estar en el mismo sistema de referencia que el a*
+        int new_len = (longitud_vector / 2) - 1;
+        for (i = 0; i <= new_len; i++)
+        {
+            col_v[i] = -1 * col_v[i] + 1;
+            row_v[i] = row_v[i] + 1;
+            printf("cccol[%d]:%d\n", i, col_v[i]);
+            printf("rrrow[%d]:%d\n", i, row_v[i]);
+        }
+
+        //hacemos la resta
+        for (i = new_len; i >= 0; i--)
+        {
+
+            col_v[i] = col_v[i - 1] - col_v[i];
+            row_v[i] = row_v[i - 1] - row_v[i];
+            printf("col[%d]:%d\n", i, col_v[i]);
+            printf("row[%d]:%d\n", i, row_v[i]);
+        }
+
+        // int col_vv[new_len],row_vv[new_len];
+        // for(i=0; i<=new_len;i++){
+        //     col_vv[i]=col_v[i]-col_v[i+1];
+        //     row_vv[i]=row_v[]-row_v[];
+        // }
+
+        move_pioneer(argc, argv, (longitud_vector / 2), col_v, row_v);
     }
 
     return 0;
@@ -472,9 +513,9 @@ int main(int argc, char **argv)
 
 void move_pioneer(int argc, char **argv, int len, int col[50], int row[50])
 {
-    int cnt = len - 1; //es 41
+    int cnt = len - 1;
     std::cout << cnt << std::endl;
-    
+
     Pioneer pioneer(argc, argv);
 
     Pioneer::direction direction = Pioneer::FORWARD;
@@ -500,17 +541,17 @@ void move_pioneer(int argc, char **argv, int len, int col[50], int row[50])
             }
             else if (direction == Pioneer::LEFT)
             {
-                pioneer.turn_for45();
+                pioneer.turn_back45();
                 //pioneer.stop();
-                pioneer.turn_for45();
+                pioneer.turn_back45();
                 pioneer.stop();
                 pioneer.go_forward();
             }
             else if (direction == Pioneer::RIGHT)
             {
-                pioneer.turn_back45();
+                pioneer.turn_for45();
                 //pioneer.stop();
-                pioneer.turn_back45();
+                pioneer.turn_for45();
                 pioneer.stop();
                 pioneer.go_forward();
             }
@@ -806,15 +847,6 @@ void move_pioneer(int argc, char **argv, int len, int col[50], int row[50])
             {
 
                 pioneer.turn_for45();
-                pioneer.stop();
-                pioneer.go_diag();
-                pioneer.stop();
-                pioneer.turn_back45();
-            }
-            else
-            {
-
-                pioneer.turn_for45();
                 //pioneer.stop();
                 pioneer.turn_for45();
                 //pioneer.stop();
@@ -824,6 +856,14 @@ void move_pioneer(int argc, char **argv, int len, int col[50], int row[50])
                 pioneer.stop();
                 pioneer.turn_back45();
                 //pioneer.stop()
+            }
+            else
+            {
+                pioneer.turn_for45();
+                pioneer.stop();
+                pioneer.go_diag();
+                pioneer.stop();
+                pioneer.turn_back45();
             }
 
             direction = Pioneer::BACKWARD;
