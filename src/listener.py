@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#si quieres ejecutar los archivos python con rosrun debes de cambiarle los permisos al archivo.
 import rospy
 from std_msgs.msg import Float64
 
