@@ -156,9 +156,9 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "a_star_publisher");
 
     char path_key;
-    printf("What do you want to use: [A*:a , RRT:r]\n");
+    printf("What do you want to use: [A*:a , RRT:r, RRT-A*:t]\n");
     path_key = getchar();
-    while (path_key != 'a' && path_key != 'r')
+    while (path_key != 'a' && path_key != 'r' && path_key != 't')
     {
         printf("Incorrect path planning, repeat key\n");
         path_key = getchar();
@@ -412,11 +412,11 @@ int main(int argc, char **argv)
         }
         move_pioneer(argc, argv, p_len, col, row);
     }
-    else if (path_key == 'r')
+    else if (path_key == 'r' || path_key == 't')
     {
 
         int h;
-        //ros::init(argc, argv, "listener");
+        std::cout << "Waiting to the python program to send us the vector position" << std::endl;
         ros::NodeHandle m;
         ros::Subscriber sub = m.subscribe("python_talker", 1000, chatterCallback);
         //ros::spin();
@@ -467,7 +467,7 @@ int main(int argc, char **argv)
             }
             //printf("int_dec=%d\n", int_dec[i]);
         }
-        int col_v[longitud_vector], row_v[longitud_vector];
+        int col_v[longitud_vector], row_v[longitud_vector],col_vv[longitud_vector], row_vv[longitud_vector] ;
         for (i = 0; i < longitud_vector / 2; i++)
         {
             col_v[i] = int_dec[i];
@@ -489,23 +489,38 @@ int main(int argc, char **argv)
             printf("rrrow[%d]:%d\n", i, row_v[i]);
         }
 
-        //hacemos la resta
-        for (i = new_len; i >= 0; i--)
+        //hacemos la resta en la parte del RRT solo
+        if (path_key == 'r')
+        {
+            for (i = new_len; i >= 0; i--)
+            {
+
+                col_vv[i] = col_v[i - 1] - col_v[i];
+                row_vv[i] = row_v[i - 1] - row_v[i];
+                printf("col[%d]:%d\n", i, col_vv[i]);
+                printf("row[%d]:%d\n", i, row_vv[i]);
+            }
+        }
+        else if (path_key == 't')
         {
 
-            col_v[i] = col_v[i - 1] - col_v[i];
-            row_v[i] = row_v[i - 1] - row_v[i];
-            printf("col[%d]:%d\n", i, col_v[i]);
-            printf("row[%d]:%d\n", i, row_v[i]);
+            int aux;
+            for (i = 0; i =<new_len ; i++)
+            {
+
+                col_vv[i] = col_v[i] - col_v[i+1];
+                row_vv[i] = row_v[i] - row_v[i+1];
+                if(col_vv[i]>1)
+                {
+                    aux=col_v[i]-1;
+
+                }
+                printf("col[%d]:%d\n", i, col_v[i]);
+                printf("row[%d]:%d\n", i, row_v[i]);
+            }
         }
 
-        // int col_vv[new_len],row_vv[new_len];
-        // for(i=0; i<=new_len;i++){
-        //     col_vv[i]=col_v[i]-col_v[i+1];
-        //     row_vv[i]=row_v[]-row_v[];
-        // }
-
-        move_pioneer(argc, argv, (longitud_vector / 2), col_v, row_v);
+        move_pioneer(argc, argv, (longitud_vector / 2), col_vv, row_vv);
     }
 
     return 0;
