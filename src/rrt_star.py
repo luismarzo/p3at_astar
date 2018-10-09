@@ -21,7 +21,7 @@ class RRT():
     """
 
     def __init__(self, start, goal, obstacleList, randArea,
-                 expandDis=0.5, goalSampleRate=20, maxIter=5000):
+                 expandDis=0.5, goalSampleRate=20, maxIter=1000):
         """
         Setting Parameter
         start:Start Position [x,y]
@@ -338,7 +338,7 @@ def main():
         (-3, 8, 0.9)]
 
     # Set Initial parameters
-    rrt= RRT(start=[0, 0], goal=[-14, 10],randArea=[min_ejex, max_ejey], obstacleList = obstacleList)
+    rrt= RRT(start=[0, 0], goal=[-5, 10],randArea=[min_ejex, max_ejey], obstacleList = obstacleList)
     path= rrt.Planning(animation=False)
 
     # Draw final path

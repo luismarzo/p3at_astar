@@ -467,7 +467,8 @@ int main(int argc, char **argv)
             }
             //printf("int_dec=%d\n", int_dec[i]);
         }
-        int col_v[longitud_vector], row_v[longitud_vector],col_vv[longitud_vector], row_vv[longitud_vector] ;
+        int col_v[longitud_vector], row_v[longitud_vector], col_vv[longitud_vector], row_vv[longitud_vector];
+        printf("Quito decimales y redondeo\n");
         for (i = 0; i < longitud_vector / 2; i++)
         {
             col_v[i] = int_dec[i];
@@ -481,6 +482,7 @@ int main(int argc, char **argv)
 
         //normalizamos para estar en el mismo sistema de referencia que el a*
         int new_len = (longitud_vector / 2) - 1;
+        printf("Cambio de sistema de referencia\n");
         for (i = 0; i <= new_len; i++)
         {
             col_v[i] = -1 * col_v[i] + 1;
@@ -492,6 +494,7 @@ int main(int argc, char **argv)
         //hacemos la resta en la parte del RRT solo
         if (path_key == 'r')
         {
+            printf("Hago la resta\n");
             for (i = new_len; i >= 0; i--)
             {
 
@@ -504,19 +507,43 @@ int main(int argc, char **argv)
         else if (path_key == 't')
         {
 
-            int aux;
-            for (i = 0; i =<new_len ; i++)
+            int aux, aux2; //aux2 lo uso para la cuenta
+            int cnt_vector_col = 0, cnt_vector_row = 0;
+            col_vv[i] = col_v[i];
+            row_vv[i] = row_v[i];
+            printf("Hacemos el vector de posiciones mas largo\n");
+            for (i = 0; i <= new_len; i++)
             {
-
-                col_vv[i] = col_v[i] - col_v[i+1];
-                row_vv[i] = row_v[i] - row_v[i+1];
-                if(col_vv[i]>1)
+                col_vv[i + cnt_vector_col] = col_v[i];
+                 row_vv[i+cnt_vector_row]=row_v[i];
+                if ((col_v[i] - col_v[i + 1]) > 1)
                 {
-                    aux=col_v[i]-1;
-
+                    for (aux = (col_v[i] - col_v[i + 1]) - 1, aux2 = 1; aux >= 1; aux--, aux2++)
+                    {
+                        cnt_vector_col++;
+                        col_vv[i + cnt_vector_col] = col_v[i] - aux2;
+                    }
                 }
-                printf("col[%d]:%d\n", i, col_v[i]);
-                printf("row[%d]:%d\n", i, row_v[i]);
+
+                if ((row_v[i] - row_v[i + 1]) > 1)
+                {
+                    for (aux = (row_v[i] - row_v[i + 1]) - 1, aux2=1; aux >= 1; aux--,aux2++)
+                    {
+                        cnt_vector_row++;
+                        row_vv[i+cnt_vector_row] = row_v[i] - aux2;
+
+                    }
+                }
+            }
+            printf("vectors alargados\n");
+            for (i = 0; i <= new_len + cnt_vector_col; i++)
+            {
+                printf("col[%d]:%d\n", i, col_vv[i]);
+                //   printf("row[%d]:%d\n", i, row_vv[i]);
+            }
+            for (i = 0; i <= new_len + cnt_vector_row; i++)
+            {             
+                printf("row[%d]:%d\n", i, row_vv[i]);
             }
         }
 
