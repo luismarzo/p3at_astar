@@ -509,31 +509,70 @@ int main(int argc, char **argv)
 
             int aux, aux2; //aux2 lo uso para la cuenta
             int cnt_vector_col = 0, cnt_vector_row = 0;
+            int flag_col = 0, flag_row = 0;
             col_vv[i] = col_v[i];
             row_vv[i] = row_v[i];
-            printf("Hacemos el vector de posiciones mas largo\n");
+            printf("Hacemos el vector de posiciones mas largooo\n");
             for (i = 0; i <= new_len; i++)
             {
                 col_vv[i + cnt_vector_col] = col_v[i];
-                 row_vv[i+cnt_vector_row]=row_v[i];
+                row_vv[i + cnt_vector_row] = row_v[i];
+                printf("ANTES DE NADA col_VV[%d]:%d\n", i + cnt_vector_col, col_vv[i + cnt_vector_col]);
+                printf("ANTES DE NADA row_VV[%d]:%d\n", i + cnt_vector_row, row_vv[i + cnt_vector_row]);
                 if ((col_v[i] - col_v[i + 1]) > 1)
                 {
                     for (aux = (col_v[i] - col_v[i + 1]) - 1, aux2 = 1; aux >= 1; aux--, aux2++)
                     {
                         cnt_vector_col++;
                         col_vv[i + cnt_vector_col] = col_v[i] - aux2;
+                        flag_col++;
+                        printf("ENTRAMOS EN COL col_vv[%d]:%d\n", i+cnt_vector_col, col_vv[i+ cnt_vector_col]);
+                
                     }
                 }
 
                 if ((row_v[i] - row_v[i + 1]) > 1)
                 {
-                    for (aux = (row_v[i] - row_v[i + 1]) - 1, aux2=1; aux >= 1; aux--,aux2++)
+                    for (aux = (row_v[i] - row_v[i + 1]) - 1, aux2 = 1; aux >= 1; aux--, aux2++)
                     {
                         cnt_vector_row++;
-                        row_vv[i+cnt_vector_row] = row_v[i] - aux2;
-
+                        row_vv[i + cnt_vector_row] = row_v[i] - aux2;
+                        flag_row++;
+                        printf("ENTRAMOS EN row row_vv[%d]:%d\n", i+cnt_vector_row, row_vv[i+ cnt_vector_row]);
                     }
                 }
+                printf("FLAG COL:%d\n", flag_col);
+                printf("FLAG row:%d\n", flag_row);
+                while (flag_col !=0 ||  flag_row != 0)
+                {printf("entro while\n");
+
+                    if (flag_col >= 1 && flag_row >= 1)
+                    {
+                        flag_col--;
+                        flag_row--;
+                        cnt_vector_row++;
+                        cnt_vector_col++;
+                        printf("ENTRAMOS EN fag varios");
+                    }
+
+                    else if (flag_col >= 1 && flag_row == 0)
+                    {
+                        cnt_vector_row++;
+                        row_vv[i + cnt_vector_row] = row_v[i];
+                        flag_col--;
+                        printf("ENTRAMOS EN flag col col_vv[%d]:%d\n", i+cnt_vector_col, col_vv[i+ cnt_vector_col]);
+                    }
+
+                    else if (flag_col == 0 && flag_row >= 1)
+                    {
+                        cnt_vector_col++;
+                        col_vv[i + cnt_vector_col] = col_v[i];
+                        flag_row--;
+                        printf("ENTRAMOS EN flag row  row_vv[%d]:%d\n", i+cnt_vector_row, row_vv[i+ cnt_vector_row]);
+                    }
+                }
+                printf("FINAL col_VV[%d]:%d\n", i + cnt_vector_col, col_vv[i + cnt_vector_col]);
+                printf("FINAL row_VV[%d]:%d\n", i + cnt_vector_row, row_vv[i + cnt_vector_row]);
             }
             printf("vectors alargados\n");
             for (i = 0; i <= new_len + cnt_vector_col; i++)
@@ -542,9 +581,10 @@ int main(int argc, char **argv)
                 //   printf("row[%d]:%d\n", i, row_vv[i]);
             }
             for (i = 0; i <= new_len + cnt_vector_row; i++)
-            {             
+            {
                 printf("row[%d]:%d\n", i, row_vv[i]);
             }
+            printf("ponemos los vectores dle mismo tamaño\n");
         }
 
         move_pioneer(argc, argv, (longitud_vector / 2), col_vv, row_vv);
