@@ -531,6 +531,18 @@ int main(int argc, char **argv)
                     }
                 }
 
+                if ((col_v[i] - col_v[i + 1]) < -1)
+                {
+                    for (aux = ((col_v[i] - col_v[i + 1]) + 1)*(-1), aux2 = 1; aux >= 1; aux--, aux2++)
+                    {
+                        cnt_vector_col++;
+                        col_vv[i + cnt_vector_col] = col_v[i] + aux2;
+                        flag_col++;
+                        printf("ENTRAMOS EN COL col_vv[%d]:%d\n", i+cnt_vector_col, col_vv[i+ cnt_vector_col]);
+                
+                    }
+                }
+
                 if ((row_v[i] - row_v[i + 1]) > 1)
                 {
                     for (aux = (row_v[i] - row_v[i + 1]) - 1, aux2 = 1; aux >= 1; aux--, aux2++)
@@ -541,11 +553,24 @@ int main(int argc, char **argv)
                         printf("ENTRAMOS EN row row_vv[%d]:%d\n", i+cnt_vector_row, row_vv[i+ cnt_vector_row]);
                     }
                 }
-                printf("2LOC_VV[0]:%d\n", col_vv[0]);
+
+                if ((row_v[i] - row_v[i + 1]) < -1)
+                {
+                    for (aux = ((row_v[i] - row_v[i + 1]) + 1) * (-1), aux2 = 1; aux >= 1; aux--, aux2++)
+                    {
+                        cnt_vector_row++;
+                        row_vv[i + cnt_vector_row] = row_v[i] + aux2;
+                        flag_row++;
+                        printf("ENTRAMOS EN row row_vv[%d]:%d\n", i+cnt_vector_row, row_vv[i+ cnt_vector_row]);
+                    }
+                }
+
+
+                //printf("2LOC_VV[0]:%d\n", col_vv[0]);
                 printf("FLAG COL:%d\n", flag_col);
                 printf("FLAG row:%d\n", flag_row);
                 while (flag_col !=0 ||  flag_row != 0)
-                {printf("entro while\n");
+                {
 
                     if (flag_col >= 1 && flag_row >= 1)
                     {
@@ -556,7 +581,7 @@ int main(int argc, char **argv)
                         // col_vv[i + cnt_vector_col] = col_v[i];
                         // row_vv[i + cnt_vector_row] = row_v[i];
                         printf("ENTRAMOS EN fag varios\n");
-                        printf("3LOC_VV[0]:%d\n", col_vv[0]);
+                        //printf("3LOC_VV[0]:%d\n", col_vv[0]);
                     }
 
                     else if (flag_col >= 1 && flag_row == 0)
@@ -564,7 +589,7 @@ int main(int argc, char **argv)
                         cnt_vector_row++;
                         row_vv[i + cnt_vector_row] = row_v[i+1];
                         flag_col--;
-                        printf("4LOC_VV[0]:%d\n", col_vv[0]);
+                        //printf("4LOC_VV[0]:%d\n", col_vv[0]);
                         printf("ENTRAMOS EN flag col col_vv[%d]:%d, row_vv[%d]:%d\n", i+cnt_vector_col, col_vv[i+ cnt_vector_col], i + cnt_vector_row,row_vv[i + cnt_vector_row]);
                     }
 
@@ -573,14 +598,14 @@ int main(int argc, char **argv)
                         cnt_vector_col++;
                         col_vv[i + cnt_vector_col] = col_v[i+1];
                         flag_row--;
-                        printf("5LOC_VV[0]:%d\n", col_vv[0]);
+                        //printf("5LOC_VV[0]:%d\n", col_vv[0]);
                         printf("ENTRAMOS EN flag row  row_vv[%d]:%d, col_vv[%d]:%d\n", i+cnt_vector_row, row_vv[i+ cnt_vector_row],i+cnt_vector_col, col_vv[i+ cnt_vector_col]);
                     }
                 }
                 printf("FINAL col_VV[%d]:%d\n", i + cnt_vector_col, col_vv[i + cnt_vector_col]);
                 printf("FINAL row_VV[%d]:%d\n", i + cnt_vector_row, row_vv[i + cnt_vector_row]);
-                printf("WOR_VV[0]:%d\n", row_vv[0]);
-                printf("6LOC_VV[0]:%d\n", col_vv[0]);
+                //printf("WOR_VV[0]:%d\n", row_vv[0]);
+                //printf("6LOC_VV[0]:%d\n", col_vv[0]);
             }
             printf("vectors alargados\n");
             for (i = 0; i <= new_len + cnt_vector_col; i++)
