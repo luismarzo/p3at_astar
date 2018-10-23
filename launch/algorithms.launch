@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="algorithm" default="0" />
+    <!-- A*=0 , RRT=1, RRT*=2;-->
+
+<group if="$(eval arg('algorithm') == 1)">
+  <node name="RRT" pkg="pioneer3at" type="simple_rrt.py"  output="screen"/>
+</group>
+
+<group if="$(eval arg('algorithm') == 2)">
+  <node name="RRT_star" pkg="pioneer3at" type="rrt_star.py"  output="screen"/>
+</group>
+</launch>
