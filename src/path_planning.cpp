@@ -143,7 +143,7 @@ void chatterCallback(const std_msgs::Float64::ConstPtr &msgs)
 
 int main(int argc, char **argv)
 {
-
+    sleep(4);
     printf("\n");
     printf("//////////////////////////////////////////////////\n");
     printf("\n");

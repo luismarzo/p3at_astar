@@ -11,6 +11,10 @@
   <arg name="urdf" default="$(find pioneer3at)/urdf/pioneer3at.urdf" />
   <arg name="name" default="pioneer3at" />
 
+
+  <node name="Path_planning" pkg="pioneer3at" type="path_planning"  output="screen"/>
+  
+
   <param name="robot_description" command="$(find xacro)/xacro.py $(arg urdf)" />
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg name) -x -4 -y -2" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
