@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Run the map server -->
+
+
+    <!-- Run AMCL -->
+    <include file="$(find p3at_slam)/navigation/common/amcl.launch"/>
+	
+
+</launch>

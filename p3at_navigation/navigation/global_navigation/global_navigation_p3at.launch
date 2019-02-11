@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Run the map server -->
+    <arg name="map" default="pioneer_map"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find p3at_localization)/maps/$(arg map).yaml">
+    <param name="frame_id" value="/odom" />
+    </node>
+    
+      <!--node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="-0.2 0 0.390 3.141592 0 0 base_link camera/scan 1" />
+  <node pkg="tf" type="static_transform_publisher" name="base_to_camera_broadcaster" args="0.020 0 0.375 0 0 0 base_link camera_link 1" /-->
+  <node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0.0 0.0 0.0 0 0 0.0 /map /odom 1000"/>
+
+    <!-- Run AMCL -->
+    <include file="$(find p3at_navigation)/navigation/common/amcl.launch"/>
+    
+	
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find p3at_navigation)/navigation/common/costmap_common_params_p3at.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find p3at_navigation)/navigation/common/costmap_common_params_p3at.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find p3at_navigation)/navigation/common/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find p3at_navigation)/navigation/global_navigation/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find p3at_navigation)/navigation/common/base_local_planner_params.yaml" command="load"/>
+        <rosparam file="$(find p3at_navigation)/navigation/common/global_planner_params.yaml" command="load" />
+        <rosparam file="$(find p3at_navigation)/navigation/common/recovery_behaviors.yaml" command="load" />
+        <rosparam>
+            planner_frequency: 1.0 
+        </rosparam>
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+    </node>
+</launch>
