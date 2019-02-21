@@ -2,22 +2,25 @@
 <launch>
   <env name="GAZEBO_MODEL_PATH" value="$GAZEBO_MODEL_PATH:$(find pioneer3at)/models" />
   <env name="GAZEBO_RESOURCE_PATH" value="$GAZEBO_RESOURCE_PATH:$(find pioneer3at)/models" />
-
+  <arg name="_world" default="false"/>
+  <arg name="namespace" default="/pioneer"/>
   
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-	<arg name="world_name" value="$(find pioneer3at)/worlds/mazee_1.world" />
+	<arg name="world_name" value="$(find pioneer3at)/worlds/mazee_1.world" if="$(arg _world)"/>
   </include>
-
+ <group ns="$(arg namespace)" unless="$(arg _world)">
   <arg name="urdf" default="$(find pioneer3at)/urdf/pioneer3at.urdf" />
   <arg name="name" default="pioneer3at" />
 
 
-  <node name="Path_planning" pkg="pioneer3at" type="path_planning"  output="screen"/>
+  <node name="Path_planning" pkg="pioneer3at" type="path_planning"  output="screen" if="$(arg _world)"/>
   
 
   <param name="robot_description" command="$(find xacro)/xacro.py $(arg urdf)" />
+ 
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg name) -x -4 -y -2" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pioneer3at)/include/pioneer.rviz"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pioneer3at)/include/pioneer.rviz" if="$(arg _world)"/>
+  </group>
 </launch>
 
