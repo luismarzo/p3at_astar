@@ -2,13 +2,26 @@
 <launch>
   <env name="GAZEBO_MODEL_PATH" value="$GAZEBO_MODEL_PATH:$(find pioneer3at)/models" />
   <env name="GAZEBO_RESOURCE_PATH" value="$GAZEBO_RESOURCE_PATH:$(find pioneer3at)/models" />
-  <arg name="_world" default="false"/>
+  <arg name="_world" default="true"/>
+    <arg name="gui" default="true"/><!--TODO esta puesto a FALSE cuidado-->
   <arg name="namespace" default="/pioneer"/>
+  <arg name="world" default="empty_light"/>
+    <arg name="paused" default="false"/>
+  <!--arg name="world_name" value="$(find pioneer3at)/worlds/mazee_1.world" if="$(arg _world)"/-->
   
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
-	<arg name="world_name" value="$(find pioneer3at)/worlds/mazee_1.world" if="$(arg _world)"/>
-  </include>
- <group ns="$(arg namespace)" unless="$(arg _world)">
+  <!--include file="$(find gazebo_ros)/launch/empty_world.launch" if="$(arg _world)">	
+    <arg name="world_name" value="$(find px4_bringup)/config/$(arg world).world" if="$(arg _world)"/>
+    <arg name="gui" value="$(arg gui)" /> 
+  <arg name="paused" default="$(arg paused)"/>
+  </include-->
+  
+   <node pkg="px4_bringup" type="launch_gzworld.py" name="gazebo_world" output="screen"
+        args="-physics=ode -world=$(find px4_bringup)/config/$(arg world).world" if="$(arg _world)"/>
+        
+
+  
+  
+ <group ns="$(arg namespace)" >
   <arg name="urdf" default="$(find pioneer3at)/urdf/pioneer3at.urdf" />
   <arg name="name" default="pioneer3at" />
 
@@ -17,10 +30,10 @@
   
 
   <param name="robot_description" command="$(find xacro)/xacro.py $(arg urdf)" />
- 
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg name) -x -4 -y -2" />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pioneer3at)/include/pioneer.rviz" if="$(arg _world)"/>
+ <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg name) -gazebo_namespace /gazebo -x -4 -y -2" />
+  <node name="spawn_vehicle" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg name) -gazebo_namespace /gazebo -x -4 -y -2" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pioneer3at)/include/pioneer.rviz" unless="$(arg _world)"/>
   </group>
 </launch>
 
